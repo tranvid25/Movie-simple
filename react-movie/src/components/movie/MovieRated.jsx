@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from "react";
-import MovieCard from "./MovieCard";
 import { SwiperSlide, Swiper } from "swiper/react";
 import "swiper/scss";
 import useSWR from "swr";
 import { fetcher } from "../../config/config";
-//https://api.themoviedb.org/3/movie/now_playing?api_key=
-const MovieList = () => {
+import MovieCardRated from "./MovieCardRated";
+const MovieRated = () => {
   const { data, error } = useSWR(
-    "https://api.themoviedb.org/3/movie/now_playing?api_key=bd4a994d57d4e648fd2a696735ed063f",
+    "https://api.themoviedb.org/3/movie/top_rated?api_key=bd4a994d57d4e648fd2a696735ed063f",
     fetcher
   );
   
-  const [movie, setMovie] = useState([]);
+  const [movieRate, setMovieRate] = useState([]);
   useEffect(() => {
-     if (data && data.results) setMovie(data.results);
+    if (data && data.results) setMovieRate(data.results);
   }, [data]);
   return (
     <div className="movie-list">
       <Swiper grabCursor={"true"} spaceBetween={40} slidesPerView={"auto"}>
-        {movie.length > 0 &&
-          movie.map((item) => (
+        {movieRate.length > 0 &&
+          movieRate.map((item) => (
             <SwiperSlide key={item.id}>
-              <MovieCard item={item}></MovieCard>
+              <MovieCardRated item={item}></MovieCardRated>
             </SwiperSlide>
           ))}
       </Swiper>
@@ -29,4 +28,4 @@ const MovieList = () => {
   );
 };
 
-export default MovieList;
+export default MovieRated;

@@ -1,12 +1,7 @@
 import React from "react";
 
-const MovieCard = ({item}) => {
-  const {
-    title,
-    vote_average,
-    release_date,
-    poster_path
-  }=item;
+const MovieCardRated = ({ item }) => {
+  const { title, vote_average, release_date, poster_path } = item;
   return (
     <div className="p-3 text-white rounded-lg movie-card bg-slate-800">
       <img
@@ -26,4 +21,4 @@ const MovieCard = ({item}) => {
   );
 };
 
-export default MovieCard;
+export default MovieCardRated;

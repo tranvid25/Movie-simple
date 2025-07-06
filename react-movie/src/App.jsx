@@ -1,12 +1,12 @@
 import { Fragment } from "react/jsx-runtime";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faYoutube } from "@fortawesome/free-brands-svg-icons";
+
 import Banner from "./components/banner/Banner";
 
 import { Route, Routes } from "react-router-dom";
 import Main from "./components/layout/Main";
 import HomePage from "./components/pages/HomePage";
 import MoviePage from "./components/pages/MoviePage";
+import MovieDetailsPage from "./components/pages/MovieDetailsPage";
 function App() {
   return (
     <Fragment>
@@ -22,6 +22,7 @@ function App() {
             }
           ></Route>
           <Route path="/movies" element={<MoviePage></MoviePage>}></Route>
+          <Route path="/movies/:movieId" element={<MovieDetailsPage></MovieDetailsPage>}></Route>
         </Route>
       </Routes>
     </Fragment>

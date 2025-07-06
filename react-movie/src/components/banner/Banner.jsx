@@ -1,6 +1,6 @@
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React from "react";
 import useSWR from "swr";
 import { fetcher } from "../../config/config";
 import { SwiperSlide, Swiper } from "swiper/react";

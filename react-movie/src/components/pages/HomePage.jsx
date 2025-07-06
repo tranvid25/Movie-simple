@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import MovieList from "../movie/MovieList";
 import MovieRated from "../movie/MovieRated";
 import MovieTrending from "../movie/MovieTrending";
-import Banner from "../banner/Banner";
+
 
 const HomePage = () => {
   return (

@@ -4,8 +4,11 @@ import React from "react";
 import useSWR from "swr";
 import { fetcher } from "../../config/config";
 import { SwiperSlide, Swiper } from "swiper/react";
+import Button from "../button/Button";
+import { useNavigate } from "react-router-dom";
 
 const Banner = () => {
+  
   const { data } = useSWR(
     "https://api.themoviedb.org/3/movie/upcoming?api_key=bd4a994d57d4e648fd2a696735ed063f",
     fetcher
@@ -26,8 +29,9 @@ const Banner = () => {
     </section>
   );
 };
-function BannerItem({item}) {
-  const { title, poster_path } = item;
+function BannerItem({ item }) {
+  const { title, poster_path,id} = item;
+  const navigate = useNavigate();
   return (
     <div className="relative w-full h-full ">
       <div className="absolute inset-0 rounded-lg overlay bg-gradient-to-t "></div>
@@ -37,9 +41,7 @@ function BannerItem({item}) {
         className="object-cover w-full h-full rounded-sm"
       />
       <div className="absolute w-full bottom-5 left-5">
-        <h2 className="mb-3 text-3xl font-bold text-white">
-          {title}
-        </h2>
+        <h2 className="mb-3 text-3xl font-bold text-white">{title}</h2>
         <div className="flex items-center pb-3 gap-x-3">
           <span className="p-2 font-medium text-purple-300 border border-white rounded-lg">
             Adventure
@@ -53,14 +55,14 @@ function BannerItem({item}) {
         </div>
 
         <div className="w-[100px]">
-          <button className="flex px-6 py-3 font-semibold text-white transition bg-purple-400 rounded-lg hover:text-red-500 gap-x-3">
+          <Button onClick={()=>navigate(`/movies/${id}`)} className="w-auto">
             <h1 className="">Watch now</h1>
             <FontAwesomeIcon
               icon={faYoutube}
               size="3x"
               className="transition cursor-pointer text-white-600"
             />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

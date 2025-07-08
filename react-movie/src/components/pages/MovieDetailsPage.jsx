@@ -1,7 +1,10 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
+import { SwiperSlide, Swiper } from "swiper/react";
+import "swiper/scss";
 import { apiKey, fetcher } from "../../config/config";
+import MovieCard from "../movie/MovieCard";
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const { data } = useSWR(
@@ -47,6 +50,7 @@ const MovieDetailsPage = () => {
         </p>
         <MovieCredits></MovieCredits>
         <MovieVideo></MovieVideo>
+        <MovieSimilar></MovieSimilar>
       </div>
     </div>
   );
@@ -101,10 +105,36 @@ function MovieVideo() {
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen className="object-fill w-full h-full p-5"
+            allowfullscreen
+            className="object-fill w-full h-full p-5"
           ></iframe>
         </div>
       ))}
+    </div>
+  );
+}
+function MovieSimilar() {
+  const { movieId } = useParams();
+  const { data, error } = useSWR(
+    `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${apiKey}`,
+    fetcher
+  );
+  if (!data) return null;
+  const{results}=data;
+  if(!results || results.length<=0) return null;
+  return (
+    <div className="py-10">
+      <h2 className="mb-10 text-3xl font-medium text-white">Similar movies</h2>
+      <div className="movie-list">
+        <Swiper grabCursor={"true"} spaceBetween={40} slidesPerView={"auto"}>
+          {results.length > 0 &&
+            results.map((item) => (
+              <SwiperSlide key={item.id}>
+                <MovieCard item={item}></MovieCard>
+              </SwiperSlide>
+            ))}
+        </Swiper>
+      </div>
     </div>
   );
 }

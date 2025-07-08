@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import useSWR from "swr";
 import { SwiperSlide, Swiper } from "swiper/react";
 import "swiper/scss";
-import { apiKey, fetcher, tmdbAPI } from "../../config/config";
+import { fetcher, tmdbAPI } from "../../config/config";
 import MovieCard from "../movie/MovieCard";
 const MovieDetailsPage = () => {
   const { movieId } = useParams();

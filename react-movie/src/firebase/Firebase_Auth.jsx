@@ -5,6 +5,7 @@ import {
   getAuth,
   onAuthStateChanged,
   updateProfile,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "./firebase-config";
@@ -15,18 +16,15 @@ const Firebase_Auth = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
-  // Lắng nghe trạng thái đăng nhập
+  // Theo dõi trạng thái đăng nhập
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
-    return () => unsubscribe(); // Clean-up khi component unmount
+    return () => unsubscribe();
   }, [auth]);
 
-  const handleSignout = () => {
-    signOut(auth);
-  };
-
+  // Đăng ký
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!email || !password) {
@@ -39,63 +37,118 @@ const Firebase_Auth = () => {
         email,
         password
       );
-      // Cập nhật tên hiển thị người dùng
+
+      // Cập nhật displayName
       await updateProfile(auth.currentUser, { displayName: "Tran Vi" });
-      const newUser =userCredential.user;
+
+      // Thêm vào Firestore
+      const newUser = userCredential.user;
       const userRef = collection(db, "users");
       await addDoc(userRef, {
         uid: newUser.uid,
         email: newUser.email,
-        displayName: newUser.displayName || "Tran Vi",
+        displayName: "Tran Vi",
         createdAt: new Date(),
       });
-      // Không cần setUser ở đây, vì onAuthStateChanged sẽ tự cập nhật
+
+      setEmail("");
+      setPassword("");
     } catch (error) {
       console.error("Đăng ký thất bại:", error.message);
       alert("Đăng ký thất bại: " + error.message);
     }
   };
 
-  return (
-    <div className="w-full max-w-[500px] mx-auto bg-white shadow-lg p-5">
-      <h2 className="mb-4 text-lg font-bold text-center">Đăng ký tài khoản</h2>
-      <form onSubmit={handleRegister}>
-        <input
-          type="text"
-          className="w-full p-3 mb-4 border rounded"
-          placeholder="Enter Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          className="w-full p-3 mb-4 border rounded"
-          placeholder="Enter Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          type="submit"
-          className="w-full p-3 text-white bg-blue-500 rounded"
-        >
-          Register
-        </button>
-      </form>
+  // Đăng nhập
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setEmail("");
+      setPassword("");
+      // Không cần setUser vì đã có onAuthStateChanged
+    } catch (error) {
+      console.error("Đăng nhập thất bại:", error.message);
+      alert("Đăng nhập thất bại: " + error.message);
+    }
+  };
 
-      {user && (
-        <div className="flex items-center mt-5 gap-x-5">
-          <span className="font-medium">
-            👤 {user.displayName || user.email}
-          </span>
+  // Đăng xuất
+  const handleSignout = () => {
+    signOut(auth);
+  };
+
+  return (
+    <>
+      {/* Form Đăng ký */}
+      <div className="w-full max-w-[500px] mx-auto bg-white shadow-lg p-5">
+        <h2 className="mb-4 text-lg font-bold text-center">Đăng ký tài khoản</h2>
+        <form onSubmit={handleRegister}>
+          <input
+            type="text"
+            className="w-full p-3 mb-4 border rounded"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            className="w-full p-3 mb-4 border rounded"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <button
-            className="p-3 text-white bg-red-500 rounded"
+            type="submit"
+            className="w-full p-3 text-white bg-blue-500 rounded"
+          >
+            Register
+          </button>
+        </form>
+      </div>
+
+      {/* Form Đăng nhập */}
+      <div className="w-full max-w-[500px] mx-auto bg-white shadow-lg p-5 mt-10">
+        <h2 className="mb-4 text-lg font-bold text-center">Đăng nhập tài khoản</h2>
+        <form onSubmit={handleLogin}>
+          <input
+            type="text"
+            className="w-full p-3 mb-4 border rounded"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            className="w-full p-3 mb-4 border rounded"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="w-full p-3 text-white bg-green-500 rounded"
+          >
+            Login
+          </button>
+        </form>
+      </div>
+
+      {/* Thông tin user & nút Sign Out */}
+      {user && (
+        <div className="w-full max-w-[500px] mx-auto mt-5 bg-gray-100 rounded p-4 text-center shadow">
+          <p className="mb-2 font-medium">
+            👤 {user.displayName || user.email}
+          </p>
+          <button
+            className="px-5 py-2 text-white bg-red-500 rounded"
             onClick={handleSignout}
           >
             Sign out
           </button>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

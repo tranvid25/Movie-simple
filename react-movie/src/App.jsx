@@ -8,6 +8,7 @@ import HomePage from "./components/pages/HomePage";
 import MoviePage from "./components/pages/MoviePage";
 import MovieDetailsPage from "./components/pages/MovieDetailsPage";
 import FirebaseApp from "./firebase/FirebaseApp";
+import Firebase_Auth from "./firebase/Firebase_Auth";
 function App() {
   return (
     <Fragment>
@@ -26,7 +27,7 @@ function App() {
           <Route path="/movies/:movieId" element={<MovieDetailsPage></MovieDetailsPage>}></Route>
         </Route>
       </Routes>
-      <FirebaseApp></FirebaseApp>
+      <Firebase_Auth></Firebase_Auth>
     </Fragment>
   );
 }

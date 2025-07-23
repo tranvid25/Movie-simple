@@ -20,9 +20,7 @@ jobs:
           node-version: 18
 
       - name: Install and Build
-        run: |
-          npm install
-          npm run build
+        run: cd react-movie && npm install
 
       # B3: Deploy build folder lên server qua SSH
       - name: Deploy via SCP
